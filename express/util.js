@@ -1,4 +1,4 @@
-const ICON_URL = "http://openweathermap.org/img/w/";
+const ICON_URL_BASE = "http://openweathermap.org/img/w/";
 
 const COUNTRIES = {
   AF: "Afghanistan",
@@ -287,7 +287,7 @@ function unixEpochToNormal(epoch) {
 }
 
 function simplifyMultiLocationResponse(data) {
-  let out = {
+  return {
     type: "success",
     locations: data["list"].map((item) => {
       return {
@@ -298,11 +298,10 @@ function simplifyMultiLocationResponse(data) {
         lat: item.coord.lat,
         lon: item.coord.lon,
         curr_temp: Math.round(item.main.temp),
-        weather_img_url: `${ICON_URL}${item.weather[0].icon}.png`,
+        weather_img_url: `${ICON_URL_BASE}${item.weather[0].icon}.png`,
       };
     }),
   };
-  return out;
 }
 
 function simplifySingleLocationResponse(data, extra, unit) {
@@ -323,7 +322,7 @@ function simplifySingleLocationResponse(data, extra, unit) {
           : 1.609 * data.current.wind_speed
       ),
       wind_deg: data.current.wind_deg,
-      weather_img_url: `${ICON_URL}${data.current.weather[0].icon}.png`,
+      weather_img_url: `${ICON_URL_BASE}${data.current.weather[0].icon}.png`,
       weather_title: data.current.weather[0].main,
       weather_description: getWeatherDescription(data.current.weather[0].main),
       ...unixEpochToNormal(data.current.dt),
@@ -332,24 +331,27 @@ function simplifySingleLocationResponse(data, extra, unit) {
       return {
         day: unixEpochToNormal(item.dt).day,
         temp: Math.round(item.temp.day),
-        weather_img_url: `${ICON_URL}${item.weather[0].icon}.png`,
+        weather_img_url: `${ICON_URL_BASE}${item.weather[0].icon}.png`,
       };
     }),
     hourly: data.hourly.map((item) => {
       return {
         time: unixEpochToNormal(item.dt),
         temp: Math.round(item.temp),
-        weather_img_url: `${ICON_URL}${item.weather[0].icon}.png`,
+        weather_img_url: `${ICON_URL_BASE}${item.weather[0].icon}.png`,
       };
     }),
   };
+
   out.weekly[0] = {
     day: "Today",
     temp: out.current.curr_temp,
     weather_img_url: out.current.weather_img_url,
   };
+
   out.weekly.pop();
   out.hourly = out.hourly.slice(0, 13);
+
   return out;
 }
 
