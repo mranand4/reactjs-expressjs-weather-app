@@ -32,22 +32,22 @@ To ensure that the project was completed successfully in the given time I divide
 
  1. Understand the project requirements, clear any doubts regarding them with seniors.
  2. Find a service which provides the APIs which satisfies most of the requirements of the project, is free and easy to use and understand. Find the relevant endpoints, see the documentations for the same and learn to use them. 
- 3. Learn the basics of React. [1st, 2nd, 3rd milestones by 7th, July]
+ 3. Learn the basics of React.
  4. Design the UI/UX of the app keeping in mind the requirements, decide what data to display and functionality to have. This is done on paper.
- 5. Based on the UI and data to display and functionality planned. Design the API endpoints and code them in express.  [4th, 5th milestones by 11th, July]
+ 5. Based on the UI and data to display and functionality planned. Design the API endpoints and code them in express. 
  6. Make the UI in React.
- 7. Couple frontend and backend. [6th, 8th milestone by 12th, July]
+ 7. Couple frontend and backend. 
  8. Learn hosting apps on heroku.
- 9. Host the app. [6th, 8th milestone by 13th, July]
+ 9. Host the app.
 
 
-**3. LEARNING RESOURCES USED**
+**3. MAJOR LEARNING RESOURCES USED**
  
- https://www.youtube.com/playlist?list=PL4cUxeGkcC9gZD-Tvwfod2gaISzfRiP9d
-https://www.youtube.com/watch?v=IiUg-2dAd4A
-https://www.w3schools.com/jsref/prop_win_localstorage.asp
-https://javascript.info/
-https://reactjs.org/tutorial/tutorial.html
+1. https://www.youtube.com/playlist?list=PL4cUxeGkcC9gZD-Tvwfod2gaISzfRiP9d
+2. https://www.youtube.com/watch?v=IiUg-2dAd4A
+3. https://www.w3schools.com/jsref/prop_win_localstorage.asp
+4. https://javascript.info/
+5. https://reactjs.org/tutorial/tutorial.html
 
 
 **3. END NOTES**
