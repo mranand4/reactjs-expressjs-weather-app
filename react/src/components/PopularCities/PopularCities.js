@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import LocationCard from "../global/LocationCard";
 
 const PopularCities = ({ unit, locationCardClickListner }) => {
@@ -14,23 +15,16 @@ const PopularCities = ({ unit, locationCardClickListner }) => {
     )}`;
 
     fetch(url)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setLocations(data.locations);
-      })
-      .catch((err) => {
-        console.log("ERROR : ", err.message);
-      });
+      .then((res) => res.json())
+      .then((data) => setLocations(data.locations))
+      .catch((err) => toast(err.message));
   }, [unit]);
 
-  let popularLocationCardClickListner = (index) => {
+  let popularLocationCardClickListner = (index) =>
     locationCardClickListner(locations[index].lat, locations[index].lon);
-  };
 
   return (
-    <div class="location-container">
+    <div className="location-container">
       <h1>Popular Locations</h1>
       <div>
         {locations.map((item, index) => (

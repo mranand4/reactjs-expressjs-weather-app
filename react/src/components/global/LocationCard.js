@@ -17,7 +17,7 @@ const LocationCard = ({
       <h1>{city}</h1>
       <p>{country}</p>
       <div>
-        <img src={weatherImgUrl} />
+        <img src={weatherImgUrl} alt="" />
         <h2>
           {temp}
           <span>{unit === "metric" ? "°C" : "℉"}</span>

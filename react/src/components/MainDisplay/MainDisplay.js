@@ -8,7 +8,7 @@ import ForecastContainer from "../global/ForecastContainer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MainDisplay = ({ lat, lon, unit }) => {
+const MainDisplay = ({ lat, lon, unit, saveCityListner }) => {
   let [hourlyForecast, setHourlyForecast] = useState([]);
   let [weeklyForecast, setWeeklyForecast] = useState([]);
   let [currentData, setCurrentData] = useState([]);
@@ -31,7 +31,7 @@ const MainDisplay = ({ lat, lon, unit }) => {
         id: id,
       })
     );
-    console.log(localStorage);
+    saveCityListner();
   };
 
   let setHome = (e) => {
@@ -47,37 +47,30 @@ const MainDisplay = ({ lat, lon, unit }) => {
   };
 
   useEffect(() => {
-    if (lat != null && lon != null) {
-      let url = `https://simple-weather-backend.herokuapp.com/getSingleLocationWeather?unit=${unit}&lat=${lat}&lon=${lon}`;
-      fetch(url)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          setHourlyForecast(data.hourly);
-          setWeeklyForecast(data.weekly);
-          setCurrentData(data.current);
-          setId(data.id);
-          setCountry(data.country);
-          setCity(data.city);
-          setWindDirStyle({
-            height: "24px",
-            width: "24px",
-            transform: `rotate(${currentData.wind_deg - 90}deg)`,
-          });
-          console.log(currentData.wind_deg);
-        })
-        .catch((err) => {
-          console.log("ERROR : ", err.message);
+    let url = `https://simple-weather-backend.herokuapp.com/getSingleLocationWeather?unit=${unit}&lat=${lat}&lon=${lon}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        setHourlyForecast(data.hourly);
+        setWeeklyForecast(data.weekly);
+        setCurrentData(data.current);
+        setId(data.id);
+        setCountry(data.country);
+        setCity(data.city);
+        setWindDirStyle({
+          height: "24px",
+          width: "24px",
+          transform: "rotate(" + String(currentData.wind_deg - 90) + "deg)",
         });
-    }
+      })
+      .catch((err) => toast(err.message));
   }, [lat, lon, unit]);
 
   return (
     <div className="main-display-container">
       <ToastContainer
         position="bottom-center"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar
       />
       <div className="main-display">
@@ -91,19 +84,19 @@ const MainDisplay = ({ lat, lon, unit }) => {
             </label>
           </div>
           <div>
-            <img src={Home} onClick={setHome} />
-            <img src={Bookmark} onClick={saveCity} />
+            <img src={Home} onClick={setHome} alt="" />
+            <img src={Bookmark} onClick={saveCity} alt="" />
           </div>
         </header>
         <section>
           <div>
-            <img src={currentData.weather_img_url} />
+            <img src={currentData.weather_img_url} alt="" />
             <h1>
               {currentData.curr_temp}
               <span>{unit === "metric" ? "°C" : "℉"}</span>
             </h1>
           </div>
-          <p class="verdict">
+          <p className="verdict">
             <b>{currentData.weather_title}</b>
             <br />
             <br />
@@ -142,7 +135,7 @@ const MainDisplay = ({ lat, lon, unit }) => {
             <label>Wind Speed</label>
           </p>
           <p>
-            <img src={WindArrow} style={windDirStyle} />
+            <img src={WindArrow} style={windDirStyle} alt="" />
             <br />
             <label>Wind Dir.</label>
           </p>

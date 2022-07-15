@@ -1,7 +1,11 @@
 import { useState } from "react";
 import Autosuggest from "react-autosuggest";
 
-const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
+const Navbar = ({
+  suggestionClickListner,
+  unitChangeListner,
+  changeToCurrentLocListner,
+}) => {
   let locations = [{ name: "", country: "", state: "", lat: -1, lon: -1 }];
   let [value, setValue] = useState("");
   let [suggestions, setSuggestions] = useState([]);
@@ -28,12 +32,10 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
   );
 
   const onChange = (event, { newValue }) => {
-    console.log(`ON CHANGED : ${value}, ${newValue}`);
     setValue(newValue);
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
-    console.log(`ON FETCH REQ : ${value}`);
     fetch(
       `https://simple-weather-backend.herokuapp.com/geoAutocomplete?q=${value}`
     )
@@ -43,7 +45,6 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
       .then((data) => {
         locations = data;
         setSuggestions(getSuggestions(value));
-        console.log(locations);
       })
       .catch((err) => {
         console.log("ERROR : ", err.message);
@@ -56,8 +57,6 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    console.log("ok");
-    console.log(suggestion);
     suggestionClickListner(suggestion.lat, suggestion.lon);
   };
 
@@ -78,7 +77,6 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
       p.className = "toggle-first-option-selected";
       unitChangeListner("metric");
     }
-    console.log(temp);
   };
 
   let body = document.body;
@@ -88,7 +86,7 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
 
   theme = localStorage.getItem("theme");
 
-  if (theme == lightTheme || theme == darkTheme) {
+  if (theme === lightTheme || theme === darkTheme) {
     body.classList.add(theme);
   } else {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
@@ -102,8 +100,7 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
 
   const onClickDisplayThemeToggle = (e) => {
     let p = e.target.parentNode;
-    console.log("CURR THEME : " + theme);
-    if (theme == lightTheme) {
+    if (theme === lightTheme) {
       body.classList.replace(lightTheme, darkTheme);
       theme = darkTheme;
       localStorage.setItem("theme", theme);
@@ -114,14 +111,13 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
       localStorage.setItem("theme", theme);
       p.className = "toggle-first-option-selected";
     }
-    console.log(theme);
   };
 
   return (
     <nav>
       <div>
         <h1>Simple Weather</h1>
-        <div class="autocomplete-container">
+        <div className="autocomplete-container">
           <Autosuggest
             suggestions={suggestions}
             onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -133,7 +129,10 @@ const Navbar = ({ suggestionClickListner, unitChangeListner }) => {
           />
         </div>
       </div>
-      <div class="toggle-container">
+      <div className="toggle-container">
+        <p onClick={changeToCurrentLocListner}>
+          &nbsp;&nbsp;&nbsp;📍&nbsp;&nbsp;&nbsp;
+        </p>
         <p onClick={onClickTempToggle} className="toggle-first-option-selected">
           <span>°C</span>
           <span>℉</span>

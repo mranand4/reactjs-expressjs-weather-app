@@ -4,50 +4,52 @@ import Navbar from "./components/Navbar/Navbar";
 import MainDisplay from "./components/MainDisplay/MainDisplay";
 import { useState, useEffect } from "react";
 
-let home = JSON.parse(localStorage.getItem("home"));
-
-let __lat = 28.6448;
-let __lon = 77.216721;
-
-if (home) {
-  __lat = home.lat;
-  __lon = home.lon;
-}
-
-console.log("pass");
+let home = { lat: 28.6448, lon: 77.216721 };
+if (localStorage) home = JSON.parse(localStorage.getItem("home")) ?? home;
 
 function App() {
   let [unit, setUnit] = useState("metric");
-  let [lat, setLat] = useState(__lat);
-  let [lon, setLon] = useState(__lon);
+  let [lat, setLat] = useState(home.lat);
+  let [lon, setLon] = useState(home.lon);
+  let [cityIds, setCityIds] = useState(Object.keys({ ...localStorage }));
 
-  useEffect(() => {
+  const changeToCurrentLoc = () => {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        console.log("allowed");
+      navigator.geolocation.getCurrentPosition((position) => {
         setLat(position.coords.latitude);
         setLon(position.coords.longitude);
-        console.log("Set");
       });
     }
-  }, []);
+  };
 
-  const changeUnit = (newUnit) => setUnit(newUnit);
-
-  let locationCardClickListner = (_lat, _lon) => {
+  const locationCardClickListner = (_lat, _lon) => {
     setLat(_lat);
     setLon(_lon);
     window.scrollTo(0, 0);
   };
+
+  const changeUnit = (newUnit) => setUnit(newUnit);
+
+  const citySaveListner = () => setCityIds(Object.keys({ ...localStorage }));
+
+  useEffect(() => {
+    if (!home.id) changeToCurrentLoc();
+  }, []);
 
   return (
     <div className="App">
       <Navbar
         suggestionClickListner={locationCardClickListner}
         unitChangeListner={changeUnit}
+        changeToCurrentLocListner={changeToCurrentLoc}
       />
       <main>
-        <MainDisplay lat={lat} lon={lon} unit={unit} />
+        <MainDisplay
+          lat={lat}
+          lon={lon}
+          unit={unit}
+          saveCityListner={citySaveListner}
+        />
         <PopularCities
           locationCardClickListner={locationCardClickListner}
           unit={unit}
@@ -55,6 +57,7 @@ function App() {
         <SavedCities
           locationCardClickListner={locationCardClickListner}
           unit={unit}
+          cityIds={cityIds}
         />
       </main>
     </div>
